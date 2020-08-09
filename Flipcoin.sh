@@ -2,30 +2,50 @@
 # code for flip coin simulation problem
 
 echo "code for flip coin simulation"
-Head=1
-Tail=1
+Head=0
+Tail=0
+function Dice ()
+{
+case $1 in
+	1)
+	 	((Head++))
+		;;
+	0)
+    		((Tail++))
+		;;
+	esac
+}
+
+
 for i in {1..43}
 do
-	check=$(( RANDOM%2 ))
-	if [[ $check -eq 1 ]]
+Dice $(( RANDOM%2 ))
+
+if [[ $Head -eq 21  &&  $Tail -eq 21 ]]
 	then
-		((Head++))
-	else
-		((Tail++))
-	fi
+		for i in {1..3}
+		do
+		Dice $(( RANDOM%2 ))
+		done
+		if [[ $(( $Head - $Tail )) -eq 2 ]]
+			then
+				echo "Head Won!!"
+				exit
+			elif [[ $(( $Tail - $Head )) -eq 2 ]]
+			then
+				echo "Tail Won!!"
+				exit
+		fi
 
-	if [[ $Head -eq 21 || $Tail -eq 21 ]]
-	then
-		break
-	fi
-done
-
-echo "Total Head wons "$Head "time"
-echo "Total Tail wons "$Tail "time"
-
-if [[ $Head -gt $Tail ]]
+elif [[ $Head -eq 21 || $Tail -eq 21 ]]
 then
-	echo "Heads have won by "$(( $Head - $Tail ))
-else
-	echo "Tails have won by "$(( $Tail - $Head ))
+		if [ $Head -gt $Tail ]
+                then
+                echo "Heads have won by "$(( $Head - $Tail ))
+                elif [ $Tail -gt $Head ]
+                then
+                echo "Tails have won by "$(( $Tail - $Head ))
+                exit
+                fi
 fi
+done
